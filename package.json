@@ -1,0 +1,45 @@
+{
+  "name": "project-root",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "eslint --fix \"apps/**/*.{ts,tsx}\"",
+    "prepare": "husky install",
+    "precommit": "lint-staged",
+    "e2e-test": "playwright test",
+    "build": "turbo build --cache-dir=.turbo --concurrency=1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.30.0",
+    "eslint": "^8.33.0",
+    "eslint-config-custom": "0.0.0-WORKSPACE",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.1",
+    "playwright": "^1.30.0",
+    "prettier": "^2.8.3"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@7.0.1",
+  "dependencies": {
+    "turbo": "^1.8.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix"
+    ]
+  }
+}

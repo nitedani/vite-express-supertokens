@@ -1,0 +1,20 @@
+{
+    "name": "eslint-config-custom",
+    "private": true,
+    "version": "0.0.0-WORKSPACE",
+    "main": "index.js",
+    "license": "MIT",
+    "devDependencies": {
+      "@babel/core": "^7.20.12",
+      "@babel/plugin-syntax-flow": "^7.18.6",
+      "@babel/plugin-transform-react-jsx": "^7.20.13",
+      "@typescript-eslint/eslint-plugin": "^5.51.0",
+      "@typescript-eslint/parser": "^5.51.0",
+      "eslint": "^8.33.0",
+      "eslint-config-prettier": "^8.6.0",
+      "eslint-config-react-app": "7.0.1",
+      "eslint-plugin-sonarjs": "^0.15.0",
+      "typescript": "^4.9.5"
+    }
+  }
+  

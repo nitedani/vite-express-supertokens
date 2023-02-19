@@ -1,0 +1,11 @@
+{
+	auto_https off
+}
+
+dashboard.local.com:80 {
+   # tracing {
+	# 	span caddy
+	# }
+   # tls /tls/cert.pem /tls/privkey.pem
+   reverse_proxy http://dashboard:80
+}

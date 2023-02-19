@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  npm_installer:
+    restart: "no"
+    image: node:18-alpine
+    working_dir: /src
+    command: [ sh, -cx, "npm i" ]
+    volumes:
+      - ./:/src:rw
+
+  caddy:
+    image: caddy
+    restart: "no"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./tls:/tls:ro
+
+  psql:
+    restart: "no"
+    image: postgres:13.2
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_MULTIPLE_DATABASES: dashboard,dashboard_user,dashboard_pass; supertokens,supertokens_user,supertokens_pass;
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+      - ./docker_pg_init.sh:/docker-entrypoint-initdb.d/docker_pg_init.sh
+
+  supertokens:
+    restart: "no"
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:4.3
+    environment:
+      POSTGRESQL_CONNECTION_URI: postgresql://supertokens_user:supertokens_pass@psql:5432/supertokens
+    depends_on:
+      - psql
+
+  dashboard:
+    restart: "no"
+    image: node:18-alpine
+    working_dir: /src
+    command: [ sh, -cx, "cd /src/apps/dashboard && npm run dev" ]
+    environment:
+      - PORT=80
+      - VITE_PUBLIC_URL=http://dashboard.local.com
+      - SUPERTOKENS_URL=http://supertokens:3567
+    volumes:
+      - ./:/src:rw
+    depends_on:
+      npm_installer:
+        condition: service_completed_successfully
+      supertokens:
+        condition: service_started
+
+volumes:
+  db_data:
